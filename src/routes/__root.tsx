@@ -63,14 +63,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Gestão Pedagógica — J. ZYMAR" },
-      { name: "description", content: "Sistema de gestão pedagógica do Complexo Escolar Privado J. ZYMAR." },
+      { title: "Gestão Pedagógica — KAMALA" },
+      { name: "description", content: "Sistema de gestão pedagógica do KAMALA." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "theme-color", content: "#1e3a5f" },
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
-      { name: "apple-mobile-web-app-title", content: "J. ZYMAR" },
+      { name: "apple-mobile-web-app-title", content: "KAMALA" },
     ],
     links: [
       { rel: "manifest", href: "/manifest.webmanifest" },
