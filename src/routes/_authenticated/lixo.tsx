@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { RotateCcw, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/lixo")({
-  head: () => ({ meta: [{ title: "Lixo — J. ZYMAR" }] }),
+  head: () => ({ meta: [{ title: "Lixo — KAMALA" }] }),
   component: Lixo,
 });
 
