@@ -9,9 +9,9 @@ import { PageTitle } from "@/components/escola";
 
 export const Route = createFileRoute("/_authenticated/aproveitamento")({
   head: () => ({ meta: [
-    { title: "Aproveitamento dos Educandos — J. ZYMAR" },
+    { title: "Aproveitamento dos Educandos — KAMALA" },
     { name: "description", content: "Aproveitamento e faltas dos educandos associados." },
-    { property: "og:title", content: "Aproveitamento dos Educandos — J. ZYMAR" },
+    { property: "og:title", content: "Aproveitamento dos Educandos — KAMALA" },
     { property: "og:description", content: "Consulta protegida do aproveitamento e das faltas dos educandos." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary" },
