@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Assinatura, ClasseSelect, DocCabecalho, PageTitle } from "@/components/escola";
 
 export const Route = createFileRoute("/_authenticated/lista-nominal")({
-  head: () => ({ meta: [{ title: "Lista Nominal — J. ZYMAR" }, { name: "description", content: "Lista nominal por classe." }] }),
+  head: () => ({ meta: [{ title: "Lista Nominal — KAMALA" }, { name: "description", content: "Lista nominal por classe." }] }),
   component: Lista,
 });
 
