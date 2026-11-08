@@ -16,7 +16,7 @@ import { percentagem } from "@/lib/gestao";
 import { GuardarDocumento } from "@/components/guardar-documento";
 
 export const Route = createFileRoute("/_authenticated/estatisticas")({
-  head: () => ({ meta: [{ title: "Estatísticas — J. ZYMAR" }, { name: "description", content: "Estatísticas por classe e mapa estatístico do professor." }] }),
+  head: () => ({ meta: [{ title: "Estatísticas — KAMALA" }, { name: "description", content: "Estatísticas por classe e mapa estatístico do professor." }] }),
   component: Estatisticas,
 });
 
