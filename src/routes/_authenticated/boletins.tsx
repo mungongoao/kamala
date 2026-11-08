@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Assinatura, ClasseSelect, DocCabecalho, PageTitle } from "@/components/escola";
 
 export const Route = createFileRoute("/_authenticated/boletins")({
-  head: () => ({ meta: [{ title: "Boletins — J. ZYMAR" }, { name: "description", content: "Boletins trimestrais e final." }] }),
+  head: () => ({ meta: [{ title: "Boletins — KAMALA" }, { name: "description", content: "Boletins trimestrais e final." }] }),
   component: Boletins,
 });
 
