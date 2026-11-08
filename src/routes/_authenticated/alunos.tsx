@@ -17,7 +17,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { ClasseSelect, DocCabecalho, PageTitle } from "@/components/escola";
 
 export const Route = createFileRoute("/_authenticated/alunos")({
- head: () => ({ meta: [{ title: "Cadastro de Alunos — J. ZYMAR" }, { name: "description", content: "Cadastro e actualização dos alunos da instituição." }, { property: "og:title", content: "Cadastro de Alunos — J. ZYMAR" }, { property: "og:description", content: "Cadastro e actualização dos alunos da instituição." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: Alunos,
+ head: () => ({ meta: [{ title: "Cadastro de Alunos — KAMALA" }, { name: "description", content: "Cadastro e actualização dos alunos da instituição." }, { property: "og:title", content: "Cadastro de Alunos — KAMALA" }, { property: "og:description", content: "Cadastro e actualização dos alunos da instituição." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: Alunos,
 });
 const vazio = { nome: "", genero: "M", classe: "1", turma: "A", estado: "Activo" };
 function Alunos() {
