@@ -51,7 +51,7 @@ function Layout() {
               className="mt-6 inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
               target="_blank"
               rel="noreferrer"
-              href={`https://wa.me/244940911634?text=${encodeURIComponent(`Olá ADM. Acabei de me registar no sistema J. ZYMAR.\nNome: ${me?.profile?.nome ?? ""}\nFunção: ${me?.profile?.cargo_pretendido ?? ""}\nPor favor, credencie a minha conta.`)}`}
+              href={`https://wa.me/244940911634?text=${encodeURIComponent(`Olá ADM. Acabei de me registar no sistema KAMALA.\nNome: ${me?.profile?.nome ?? ""}\nFunção: ${me?.profile?.cargo_pretendido ?? ""}\nPor favor, credencie a minha conta.`)}`}
             >
               <MessageCircle className="h-4 w-4" /> Avisar o ADM no WhatsApp
             </a>
