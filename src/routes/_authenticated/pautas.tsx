@@ -14,7 +14,7 @@ import { Assinatura, ClasseSelect, DocCabecalho, PageTitle } from "@/components/
 import { GuardarDocumento } from "@/components/guardar-documento";
 
 export const Route = createFileRoute("/_authenticated/pautas")({
-  head: () => ({ meta: [{ title: "Pautas — J. ZYMAR" }, { name: "description", content: "Mini-pautas, pautas trimestrais e final." }] }),
+  head: () => ({ meta: [{ title: "Pautas — KAMALA" }, { name: "description", content: "Mini-pautas, pautas trimestrais e final." }] }),
   component: Pautas,
 });
 
