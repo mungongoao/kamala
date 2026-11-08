@@ -16,7 +16,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { PageTitle } from "@/components/escola";
 
 export const Route = createFileRoute("/_authenticated/utilizadores")({
-  head: () => ({ meta: [{ title: "Utilizadores — J. ZYMAR" }, { name: "description", content: "Gestão de utilizadores." }] }),
+  head: () => ({ meta: [{ title: "Utilizadores — KAMALA" }, { name: "description", content: "Gestão de utilizadores." }] }),
   component: Utilizadores,
 });
 
