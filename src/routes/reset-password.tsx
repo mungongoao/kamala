@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 export const Route = createFileRoute("/reset-password")({
-  head: () => ({ meta: [{ title: "Nova Palavra-passe — J. ZYMAR" }, { name: "description", content: "Recuperação segura da conta J. ZYMAR." }, { property: "og:title", content: "Nova Palavra-passe — J. ZYMAR" }, { property: "og:description", content: "Recuperação segura da conta J. ZYMAR." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
+  head: () => ({ meta: [{ title: "Nova Palavra-passe — KAMALA" }, { name: "description", content: "Recuperação segura da conta KAMALA." }, { property: "og:title", content: "Nova Palavra-passe — KAMALA" }, { property: "og:description", content: "Recuperação segura da conta KAMALA." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: ResetPassword,
 });
 function ResetPassword() {
