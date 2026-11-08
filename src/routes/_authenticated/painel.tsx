@@ -8,7 +8,7 @@ import { Users, UserRound, GraduationCap, BookOpen, CalendarDays, ClipboardCheck
 import { NOMES_PAPEL } from "@/lib/dados";
 
 export const Route = createFileRoute("/_authenticated/painel")({
-  head: () => ({ meta: [{ title: "Painel — J. ZYMAR" }, { name: "description", content: "Resumo do sistema pedagógico." }] }),
+  head: () => ({ meta: [{ title: "Painel — KAMALA" }, { name: "description", content: "Resumo do sistema pedagógico." }] }),
   component: Painel,
 });
 
