@@ -6,9 +6,9 @@ import { GraduationCap } from "lucide-react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "J. ZYMAR — Gestão Pedagógica" },
-      { name: "description", content: "Portal de gestão pedagógica: alunos, notas, pautas e boletins do Complexo Escolar J. ZYMAR." },
-      { property: "og:title", content: "J. ZYMAR — Gestão Pedagógica" },
+      { title: "KAMALA — Gestão Pedagógica" },
+      { name: "description", content: "Portal de gestão pedagógica: alunos, notas, pautas e boletins do KAMALA." },
+      { property: "og:title", content: "KAMALA — Gestão Pedagógica" },
       { property: "og:description", content: "Alunos, notas, pautas e boletins num só lugar." },
     ],
   }),
@@ -30,7 +30,7 @@ function Inicio() {
         <p className="text-sm uppercase tracking-[0.25em] opacity-80">{inst?.republica ?? "República de Angola"}</p>
         <p className="mt-1 text-sm opacity-80">{inst?.ministerio}</p>
         <h1 className="mt-6 max-w-3xl text-4xl font-semibold leading-tight md:text-5xl">
-          {inst?.nome_escola ?? "Complexo Escolar Privado J. ZYMAR"}
+          {inst?.nome_escola ?? "KAMALA"}
         </h1>
         <p className="mt-4 text-lg opacity-85">Gestão Pedagógica · Ano lectivo {inst?.ano_lectivo ?? "2026/2027"}</p>
         <Button asChild size="lg" variant="secondary" className="mt-10">
