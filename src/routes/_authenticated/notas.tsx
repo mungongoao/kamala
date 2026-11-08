@@ -15,7 +15,7 @@ import { TurmaSelect } from "@/components/turma-select";
 import { ClasseSelect, PageTitle } from "@/components/escola";
 
 export const Route = createFileRoute("/_authenticated/notas")({
-  head: () => ({ meta: [{ title: "Lançar Notas — J. ZYMAR" }, { name: "description", content: "Lançamento de notas por disciplina." }] }),
+  head: () => ({ meta: [{ title: "Lançar Notas — KAMALA" }, { name: "description", content: "Lançamento de notas por disciplina." }] }),
   component: Notas,
 });
 
