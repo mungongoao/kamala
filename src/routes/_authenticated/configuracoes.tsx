@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageTitle } from "@/components/escola";
 
 export const Route = createFileRoute("/_authenticated/configuracoes")({
-  head: () => ({ meta: [{ title: "Instituição — J. ZYMAR" }, { name: "description", content: "Dados institucionais dos documentos." }] }),
+  head: () => ({ meta: [{ title: "Instituição — KAMALA" }, { name: "description", content: "Dados institucionais dos documentos." }] }),
   component: Config,
 });
 
