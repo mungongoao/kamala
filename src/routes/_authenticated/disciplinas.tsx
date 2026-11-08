@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { PageTitle } from "@/components/escola";
 
 export const Route = createFileRoute("/_authenticated/disciplinas")({
-  head: () => ({ meta: [{ title: "Disciplinas — J. ZYMAR" }, { name: "description", content: "Cadastro de disciplinas por nível de ensino e classe." }] }),
+  head: () => ({ meta: [{ title: "Disciplinas — KAMALA" }, { name: "description", content: "Cadastro de disciplinas por nível de ensino e classe." }] }),
   component: Disciplinas,
 });
 
