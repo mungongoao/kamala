@@ -13,6 +13,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { entradaExterna } from "@/lib/gestao";
 import { registerPwa } from "@/lib/pwa-register";
+import { PwaInstitutionBranding } from "@/components/pwa-institution-branding";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -70,7 +71,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "theme-color", content: "#1e3a5f" },
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
-      { name: "apple-mobile-web-app-title", content: "KAMALA" },
+      { name: "apple-mobile-web-app-title", content: "Colégio Kamala" },
     ],
     links: [
       { rel: "manifest", href: "/manifest.webmanifest" },
@@ -138,6 +139,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <PwaInstitutionBranding />
       <Outlet />
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
