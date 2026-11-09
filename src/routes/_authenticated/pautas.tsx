@@ -202,9 +202,8 @@ function Pautas() {
               )}
             </table>
             {tipo !== "mini" && disciplinas.some((d) => d.extra) && <p style={{ fontSize: 10, marginTop: 4 }}>* Disciplina extra-curricular (não conta para o resultado).</p>}
-            <div className="mt-8 flex justify-around">
+            <div className="mt-8 flex justify-center">
               <Assinatura cargo="O Pedagógico" nome={inst?.pauta_pedagogico} />
-              <Assinatura cargo="A Direcção" nome={inst?.pauta_direccao} />
             </div>
           </div>
         </div>
