@@ -94,7 +94,6 @@ function Config() {
         <CardHeader><CardTitle>Rodapé das Pautas</CardTitle></CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2">
           <div><Label>O Pedagógico (nome para assinatura)</Label><Input value={f.pauta_pedagogico ?? ""} onChange={set("pauta_pedagogico")} /></div>
-          <div><Label>A Direcção (nome para assinatura)</Label><Input value={f.pauta_direccao ?? ""} onChange={set("pauta_direccao")} /></div>
         </CardContent>
       </Card>
       <Card>
