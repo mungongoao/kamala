@@ -122,7 +122,7 @@ function Boletim({ aluno, n, classe, tipo, inst, disciplinas, notas, faltasT }: 
   return (
     <div className="doc doc-a5 shadow">
       <div className="boletim-header">
-        <div className="boletim-visto"><Assinatura cargo="Visto pelo Diretor" nome={inst?.pauta_direccao} /></div>
+        <div className="boletim-visto"><Assinatura cargo="Visto pelo Diretor" nome={inst?.pauta_pedagogico} /></div>
         <div className="boletim-instituicao text-center" style={{ fontSize: 12 }}>
           {inst?.logo_url && <img src={inst.logo_url} alt="" style={{ height: 40, margin: "0 auto 4px" }} />}
           <div style={{ fontWeight: 700, fontSize: 13 }}>{inst?.nome_escola}</div>
