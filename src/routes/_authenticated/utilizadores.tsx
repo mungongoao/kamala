@@ -41,7 +41,7 @@ function Utilizadores() {
       if (perfilError) throw perfilError;
       const { data: r, error: rolesError } = await supabase.from("user_roles").select("*");
       if (rolesError) throw rolesError;
-      return (p ?? []).map((u) => ({ ...u, papeis: (r ?? []).filter((x) => x.user_id === u.id).map((x) => x.role as Papel) }));
+      return (p ?? []).map((u) => ({ ...u, papeis: (r ?? []).filter((x) => x.user_id === u.id).map((x) => (x.role === "coordenador" ? "professor" : x.role) as Papel) }));
     },
   });
 
