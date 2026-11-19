@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Download } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { useMe } from "@/lib/dados";
 import type { PaperSize } from "exceljs";
 
-export function GuardarDocumento({ selector = ".doc", nome = "Documento KAMALA", preparar, disabled = false }: { selector?: string; nome?: string; preparar?: () => void; disabled?: boolean }) {
+export function GuardarDocumento({ selector = ".doc", nome = "Documento KAMALA", preparar, disabled = false, allowTeacher = false }: { selector?: string; nome?: string; preparar?: () => void; disabled?: boolean; allowTeacher?: boolean }) {
+  const { data: me } = useMe();
   const [busy, setBusy] = useState(false);
   async function guardar() {
     setBusy(true);
@@ -61,5 +63,6 @@ export function GuardarDocumento({ selector = ".doc", nome = "Documento KAMALA",
     } catch (error) { toast.error(error instanceof Error ? error.message : "Não foi possível guardar."); }
     finally { setBusy(false); }
   }
+  if (!me?.isStaff && !(allowTeacher && me?.isProfessor)) return null;
   return <Button type="button" variant="outline" disabled={disabled || busy} onClick={guardar}><Download className="mr-2 h-4 w-4" />{busy ? "A guardar…" : "Guardar · Excel"}</Button>;
 }
