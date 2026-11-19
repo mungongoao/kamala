@@ -29,12 +29,12 @@ END
 $$;
 
 CREATE OR REPLACE FUNCTION public.is_guardian_of(_user_id uuid, _student_id bigint)
-RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $
+RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
   SELECT EXISTS (
     SELECT 1 FROM public.guardian_students
     WHERE guardian_id = _user_id AND student_id = _student_id
   )
-$;
+$$;
 
 CREATE OR REPLACE FUNCTION public.prevent_duplicate_teacher_assignment()
 RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
@@ -60,7 +60,7 @@ BEGIN
 END
 $$;
 
-DO $
+DO $$
 BEGIN
   IF EXISTS (
     SELECT 1
@@ -77,7 +77,7 @@ BEGIN
     RAISE EXCEPTION 'Existem disciplinas/turmas atribuídas a mais de um professor. Corrija as atribuições duplicadas antes de aplicar esta migração.';
   END IF;
 END
-$;
+$$;
 
 DROP TRIGGER IF EXISTS prevent_duplicate_teacher_assignment ON public.teacher_assignments;
 CREATE TRIGGER prevent_duplicate_teacher_assignment
