@@ -39,6 +39,9 @@ $;
 CREATE OR REPLACE FUNCTION public.prevent_duplicate_teacher_assignment()
 RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
 BEGIN
+  IF NOT public.has_role(NEW.user_id, 'professor') THEN
+    RAISE EXCEPTION 'Só é possível atribuir disciplinas a utilizadores com cargo de Professor.';
+  END IF;
   IF EXISTS (
     SELECT 1
     FROM public.teacher_assignments other
