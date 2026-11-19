@@ -122,7 +122,7 @@ function RootComponent() {
       let visited = false;
       try { visited = sessionStorage.getItem("jzymar-entrada") === "1"; sessionStorage.setItem("jzymar-entrada", "1"); } catch { /* Navigation still works when browser storage is disabled. */ }
       if (active && !recovery && entradaExterna(initialPath, !!data.session, navigation?.type === "reload", visited)) {
-        await router.navigate({ to: "/", replace: true });
+        await router.navigate({ to: "/painel", replace: true });
       }
     }
     void checkEntry();
