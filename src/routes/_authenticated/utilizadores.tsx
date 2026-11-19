@@ -65,7 +65,7 @@ function Utilizadores() {
     catch (e) { toast.error((e as Error).message); }
   }
 
-  const papeisDisponiveis: Papel[] = me.isAdmin ? ["admin", "pedagogico", "coordenador", "professor", "encarregado"] : ["pedagogico", "coordenador", "professor", "encarregado"];
+  const papeisDisponiveis: Papel[] = me.isAdmin ? ["admin", "pedagogico", "professor", "encarregado"] : ["pedagogico", "professor", "encarregado"];
 
   return (
     <div>
@@ -158,6 +158,12 @@ function Atribuicoes({ user, onClose }: { user: { id: string; nome: string }; on
   async function toggle(sid: string, turma: string, on: boolean) {
     setBusy(true);
     const actual = atrib.find(a => a.subject_id === sid);
+    if (on) {
+      const { data: outros, error: conflitoError } = await supabase.from("teacher_assignments").select("user_id,turmas").eq("subject_id", sid).neq("user_id", user.id);
+      if (conflitoError) { setBusy(false); toast.error(conflitoError.message); return; }
+      const conflito = (outros ?? []).some((a) => !a.turmas?.length || !turma || a.turmas.includes(turma));
+      if (conflito) { setBusy(false); toast.error("Esta disciplina já está atribuída a outro professor nesta turma."); return; }
+    }
     const d = disc.find(d => d.id === sid);
     const formadas = Array.from(new Set(alunos.filter(a => a.classe === d?.classe).map(a => a.turma)));
     const antigas = actual ? (actual.turmas.length ? actual.turmas : formadas) : [];
@@ -172,6 +178,13 @@ function Atribuicoes({ user, onClose }: { user: { id: string; nome: string }; on
     <Dialog open onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-h-[80vh] overflow-auto">
         <DialogHeader><DialogTitle>Disciplinas de {user.nome}</DialogTitle></DialogHeader>
+        <div className="rounded-md border bg-muted/30 p-3">
+          <p className="mb-2 text-sm font-semibold">Disciplinas atribuídas</p>
+          <div className="flex flex-wrap gap-2">
+            {atrib.map((a) => { const d = disc.find((item) => item.id === a.subject_id); return d ? <Badge key={a.id} variant="secondary">{nomeClasse(d.classe)} · {d.nome} · {a.turmas?.length ? a.turmas.join(", ") : "Todas as turmas"}</Badge> : null; })}
+            {atrib.length === 0 && <span className="text-xs text-muted-foreground">Nenhuma disciplina atribuída.</span>}
+          </div>
+        </div>
         <Select value={ciclo} onValueChange={v => {setCiclo(v);setClasse("");}}><SelectTrigger aria-label="Ciclo"><SelectValue placeholder="Ciclo" /></SelectTrigger><SelectContent><SelectItem value="primario">Ensino Primário</SelectItem><SelectItem value="primeiro">Primeiro Ciclo</SelectItem></SelectContent></Select>
         {ciclo && <Select value={classe} onValueChange={setClasse}><SelectTrigger aria-label="Classe"><SelectValue placeholder="Classe" /></SelectTrigger><SelectContent>{ciclo === "primeiro" && <SelectItem value="todas">7ª, 8ª e 9ª Classes</SelectItem>}{classes.map(c => <SelectItem key={c} value={c}>{nomeClasse(c)}</SelectItem>)}</SelectContent></Select>}
         <div className="space-y-3">{classes.filter(c => listadas.some(d => d.classe === c)).map(c => <section key={c}><h3 className="mb-2 font-semibold">{nomeClasse(c)}</h3>{listadas.filter(d => d.classe === c).flatMap(d => {
