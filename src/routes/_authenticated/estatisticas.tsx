@@ -117,7 +117,7 @@ function Estatisticas() {
           </SelectContent>
         </Select>
         <Button variant="outline" onClick={imprimir}><Printer className="mr-2 h-4 w-4" />Imprimir / PDF</Button>
-        <GuardarDocumento nome={nomeImpressao} />
+        <GuardarDocumento nome={nomeImpressao} allowTeacher />
       </PageTitle>
 
       {(vista === "classe" && me?.isStaff) || !me?.isProfessor ? (

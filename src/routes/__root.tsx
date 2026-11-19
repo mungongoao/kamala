@@ -119,10 +119,8 @@ function RootComponent() {
     const recovery = /(?:type=recovery|token_hash=|access_token=|code=)/.test(window.location.search + window.location.hash);
     async function checkEntry() {
       const { data } = await supabase.auth.getSession();
-      let visited = false;
-      try { visited = sessionStorage.getItem("jzymar-entrada") === "1"; sessionStorage.setItem("jzymar-entrada", "1"); } catch { /* Navigation still works when browser storage is disabled. */ }
-      if (active && !recovery && entradaExterna(initialPath, !!data.session, navigation?.type === "reload", visited)) {
-        await router.navigate({ to: "/", replace: true });
+      if (active && !recovery && entradaExterna(initialPath, !!data.session, navigation?.type === "reload")) {
+        await router.navigate({ to: "/painel", replace: true });
       }
     }
     void checkEntry();

@@ -12,8 +12,7 @@ export const percentagem = (quantidade: number, total: number) => total > 0 ? Ma
 export function turmaPermitida(atribuicoes: { subject_id: string; turmas: string[] }[], subject: string, turma: string) {
   return atribuicoes.some((a) => a.subject_id === subject && (a.turmas.length === 0 || a.turmas.includes(turma)));
 }
-export function entradaExterna(path: string, autenticado: boolean, reload: boolean, visitou: boolean) {
-  if (path === "/" || path === "/reset-password") return false;
-  if (path === "/auth") return reload || !visitou;
-  return !autenticado && !visitou;
+export function entradaExterna(path: string, autenticado: boolean, reload: boolean) {
+  if (path === "/reset-password" || path === "/auth") return false;
+  return autenticado && !reload;
 }

@@ -28,6 +28,7 @@ function Notas() {
   const [turma, setTurma] = useState("todas");
   const [disc, setDisc] = useState("");
   const [tri, setTri] = useState("1");
+  const [pesquisa, setPesquisa] = useState("");
   const { data: disciplinas } = useDisciplinas(classe);
   const { data: alunos } = useAlunos(classe);
   const { data: notas } = useNotasClasse(classe);
@@ -45,6 +46,7 @@ function Notas() {
   );
   const visiveis = useMemo(() => (alunos ?? []).filter(a => (turma === "todas" || a.turma === turma) && (me?.isStaff || me?.isCoordenador || turmaPermitida(atrib ?? [], disc, a.turma))), [alunos,turma,me,atrib,disc]);
   const disciplina = permitidas.find((d) => d.id === disc);
+  const alunosFiltrados = visiveis.filter((a) => !pesquisa.trim() || a.nome.toLocaleLowerCase("pt").includes(pesquisa.trim().toLocaleLowerCase("pt")));
   const max = escalaMax(classe);
   const qual = isQualitativa(classe);
   const comExame = isClasseExame(classe) && tri === "3";
@@ -68,7 +70,7 @@ function Notas() {
   async function guardar() {
     if (!disciplina) return;
     const rows = [];
-    for (const a of visiveis) {
+    for (const a of alunosFiltrados) {
       const l = linhas[a.id] ?? vazia;
       const vals: (number | null)[] = [num(l.mac), num(l.npt), num(l.exame_escrito), num(l.exame_oral)];
       if (vals.some((v) => v != null && (isNaN(v) || v < 0 || v > max)))
@@ -117,6 +119,10 @@ function Notas() {
             {nomeClasse(classe)} · {disciplina.nome} · {qual ? "Avaliação qualitativa" : isClasseExame(classe) && tri === "3" ? `Escala 0–${max} · MT3 = MACT3` : `Escala 0–${max} · MT${tri} = (MAC + NPT) / 2`}
             {comExame && " · Inclui Exame escrito" + (oral ? " e oral" : "")}
           </p>
+          <div className="mb-3 flex flex-wrap items-center gap-3">
+            <Input value={pesquisa} onChange={(e) => setPesquisa(e.target.value)} placeholder="Pesquisar aluno pelo nome..." className="w-full sm:max-w-sm" />
+            <span className="text-sm text-muted-foreground">{alunosFiltrados.length} aluno(s) na lista</span>
+          </div>
           <div className="overflow-auto rounded-md border bg-card">
             <table className="w-full text-sm">
               <thead className="bg-secondary">
@@ -129,7 +135,7 @@ function Notas() {
                 </tr>
               </thead>
               <tbody>
-                {visiveis.map((a, i) => {
+                {alunosFiltrados.map((a, i) => {
                   const l = linhas[a.id] ?? vazia;
                   const mt = mediaTrimestral({ mac: num(l.mac), npt: num(l.npt), trimestre: Number(tri) }, classe);
                   return (

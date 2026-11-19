@@ -5,7 +5,7 @@ import { TurmaSelect } from "@/components/turma-select";
 import { Printer } from "lucide-react";
 import { useAlunos, useInstituicao, useMe, useFaltasClasse } from "@/lib/dados";
 import { useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
@@ -23,8 +23,14 @@ function Lista() {
   const { data: me } = useMe();
   const [classe, setClasse] = useState("1");
   const { data: todos = [] } = useAlunos(classe);
+  const { data: atribuicoes = [] } = useQuery({
+    queryKey: ["atribuicoes-lista-nominal", me?.id],
+    enabled: !!me?.isProfessor,
+    queryFn: async () => (await supabase.from("teacher_assignments").select("turmas, subjects(classe)").eq("user_id", me?.id ?? "")).data ?? [],
+  });
+  const todosPermitidos = !me?.isProfessor || me?.isStaff ? todos : todos.filter((a) => atribuicoes.some((at) => at.subjects?.classe === classe && (!at.turmas?.length || at.turmas.includes(a.turma))));
   const [turma, setTurma] = useState("todas");
-  const alunos = todos.filter((a) => turma === "todas" || a.turma === turma);
+  const alunos = todosPermitidos.filter((a) => turma === "todas" || a.turma === turma);
   const { data: inst } = useInstituicao();
   const qc = useQueryClient();
   const [tri, setTri] = useState("1");
@@ -54,13 +60,13 @@ function Lista() {
   return (
     <div>
       <PageTitle title="Lista Nominal">
-        <ClasseSelect value={classe} onChange={(v) => { setClasse(v); setTurma("todas"); }} /><TurmaSelect alunos={todos} value={turma} onChange={setTurma} /><GuardarDocumento nome={nomeImpressao} />
+        <ClasseSelect value={classe} onChange={(v) => { setClasse(v); setTurma("todas"); }} /><TurmaSelect alunos={todosPermitidos} value={turma} onChange={setTurma} />{me?.isStaff && <GuardarDocumento nome={nomeImpressao} />}
         <Select value={tri} onValueChange={setTri}>
           <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
           <SelectContent>{["1","2","3"].map((t) => <SelectItem key={t} value={t}>{t}º Trimestre (faltas)</SelectItem>)}</SelectContent>
         </Select>
         {podeF && <Button onClick={guardarFaltas}>Guardar faltas</Button>}
-        <Button variant="outline" onClick={imprimir}><Printer className="mr-2 h-4 w-4" />Imprimir</Button>
+        {me?.isStaff && <Button variant="outline" onClick={imprimir}><Printer className="mr-2 h-4 w-4" />Imprimir</Button>}
       </PageTitle>
       <div className="print-area overflow-auto">
         <div className="doc doc-a4 mx-auto shadow" >

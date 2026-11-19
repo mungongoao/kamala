@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { Printer, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -29,9 +31,15 @@ function Boletins() {
   const { data: alunos = [] } = useAlunos(classe);
   const { data: notas = [] } = useNotasClasse(classe);
   const { data: faltasT = [] } = useFaltasClasse(classe);
+  const { data: atribuicoes = [] } = useQuery({
+    queryKey: ["atribuicoes-boletins", me?.id],
+    enabled: !!me?.isProfessor,
+    queryFn: async () => (await supabase.from("teacher_assignments").select("turmas, subjects(classe)").eq("user_id", me?.id ?? "")).data ?? [],
+  });
+  const alunosPermitidos = !me?.isProfessor || me?.isStaff ? alunos : alunos.filter((a) => atribuicoes.some((at) => at.subjects?.classe === classe && (!at.turmas?.length || at.turmas.includes(a.turma))));
   const toggle = (id: number) => setSel((p) => p.includes(id) ? p.filter((x) => x !== id) : p.length >= 10 ? (toast.error("Pode seleccionar no máximo 10 alunos."), p) : [...p, id]);
-  const filtrados = pesquisa.trim() ? alunos.filter((a) => a.nome.toLowerCase().includes(pesquisa.trim().toLowerCase())) : alunos;
-  const lista = alunos.filter((a) => sel.includes(a.id));
+  const filtrados = pesquisa.trim() ? alunosPermitidos.filter((a) => a.nome.toLowerCase().includes(pesquisa.trim().toLowerCase())) : alunosPermitidos;
+  const lista = alunosPermitidos.filter((a) => sel.includes(a.id));
   const paginas = Array.from({ length: Math.ceil(lista.length / 2) }, (_, i) => lista.slice(i * 2, i * 2 + 2));
   const nomeImpressao = lista.length > 2
     ? `Boletim - ${nomeClasse(classe)}`
@@ -70,7 +78,7 @@ function Boletins() {
           </>
         )}
       </PageTitle>
-      {!me?.podeImprimirBoletim && <p className="mb-4 text-sm text-muted-foreground print:hidden">Apenas os Coordenadores e o ADM podem imprimir boletins.</p>}
+      {!me?.podeImprimirBoletim && <p className="mb-4 text-sm text-muted-foreground print:hidden">Apenas o ADM e o Pedagógico podem imprimir boletins.</p>}
       <div className="mb-4 max-h-56 overflow-auto rounded-md border p-2 print:hidden">
         <p className="mb-2 text-xs text-muted-foreground">Seleccione até 10 alunos ({sel.length}/10). A impressão organiza dois boletins por folha A4 horizontal (até 5 folhas).</p>
         <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-3">
