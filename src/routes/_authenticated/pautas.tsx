@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Printer } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAlunos, useDisciplinas, useInstituicao, useMe, useNotasClasse } from "@/lib/dados";
 import {
-  cicloDe, fmt, mediaGeral, isClasseExame, isQualitativa, mediaTrimestral, nomeClasse, notaMinima, resultadoFinal, resultadoTrimestreDetalhado, resumoDisciplina, temExameOral,
+  fmt, mediaGeral, isClasseExame, isQualitativa, mediaTrimestral, nomeClasse, notaMinima, resultadoFinal, resultadoTrimestreDetalhado, resumoDisciplina, temExameOral,
 } from "@/lib/avaliacao";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -31,18 +31,18 @@ function Pautas() {
   const { data: atribuicoes = [] } = useQuery({
     queryKey: ["atribuicoes-pautas", me?.id],
     enabled: !!me?.isProfessor,
-    queryFn: async () => (await supabase.from("teacher_assignments").select("subject_id, subjects(classe)").eq("user_id", me?.id ?? "")).data ?? [],
+    queryFn: async () => (await supabase.from("teacher_assignments").select("subject_id,turmas, subjects(classe)").eq("user_id", me?.id ?? "")).data ?? [],
   });
-  const ciclosProfessor = useMemo(() => new Set(atribuicoes.map((a) => cicloDe(a.subjects?.classe ?? ""))), [atribuicoes]);
-  const podeVerClasse = !me?.isProfessor || ciclosProfessor.has(cicloDe(classe));
-  useEffect(() => { if (me?.isProfessor && tipo !== "tri") setTipo("tri"); }, [me?.isProfessor, tipo]);
+  const podeVerClasse = !me?.isProfessor || atribuicoes.some((a) => a.subjects?.classe === classe);
+  const alunosVisiveis = !me?.isProfessor ? alunos : alunos.filter((aluno) => atribuicoes.some((a) => a.subjects?.classe === classe && (!a.turmas?.length || a.turmas.includes(aluno.turma))));
+  const disciplinasMini = !me?.isProfessor ? disciplinas : disciplinas.filter((d) => atribuicoes.some((a) => a.subject_id === d.id));
   const notasDe = (aid: number, sid: string) => notas.filter((n) => n.student_id === aid && n.subject_id === sid);
   const nt = (aid: number, sid: string, t: number) => notas.find((n) => n.student_id === aid && n.subject_id === sid && n.trimestre === t);
   const qual = isQualitativa(classe);
   const exame = isClasseExame(classe);
   const min = notaMinima(classe);
   const cls = (v: number | null) => (v == null ? "" : v < min ? "neg" : "pos");
-  const disciplina = disciplinas.find((d) => d.id === disc);
+  const disciplina = disciplinasMini.find((d) => d.id === disc);
 
   const titulo = tipo === "mini" ? "Mini-Pauta" : tipo === "tri" ? `Pauta do ${tri}º Trimestre` : "Pauta Final";
   const sub = `${nomeClasse(classe)}${tipo === "mini" && disciplina ? ` · ${disciplina.nome}` : ""} · Ano lectivo ${inst?.ano_lectivo ?? ""}`;
@@ -61,14 +61,14 @@ function Pautas() {
   return (
     <div>
       <PageTitle title="Pautas">
-        {!me?.isProfessor && <Tabs value={tipo} onValueChange={setTipo}>
+        <Tabs value={tipo} onValueChange={setTipo}>
           <TabsList><TabsTrigger value="mini">Mini-Pauta</TabsTrigger><TabsTrigger value="tri">Trimestral</TabsTrigger><TabsTrigger value="final">Final</TabsTrigger></TabsList>
         </Tabs>}
         <ClasseSelect value={classe} onChange={(v) => { setClasse(v); setDisc(""); }} />
         {tipo === "mini" && (
           <Select value={disc} onValueChange={setDisc}>
             <SelectTrigger className="w-52"><SelectValue placeholder="Disciplina" /></SelectTrigger>
-            <SelectContent>{disciplinas.map((d) => <SelectItem key={d.id} value={d.id}>{d.nome}</SelectItem>)}</SelectContent>
+            <SelectContent>{disciplinasMini.map((d) => <SelectItem key={d.id} value={d.id}>{d.nome}</SelectItem>)}</SelectContent>
           </Select>
         )}
         {tipo === "tri" && (
@@ -77,8 +77,8 @@ function Pautas() {
             <SelectContent>{["1", "2", "3"].map((t) => <SelectItem key={t} value={t}>{t}º Trimestre</SelectItem>)}</SelectContent>
           </Select>
         )}
-        <Button variant="outline" onClick={imprimir}><Printer className="mr-2 h-4 w-4" />Imprimir / PDF</Button>
-        <GuardarDocumento nome={nomeImpressao} disabled={tipo === "mini" && !disciplina} />
+        {!me?.isProfessor && <Button variant="outline" onClick={imprimir}><Printer className="mr-2 h-4 w-4" />Imprimir / PDF</Button>}
+        {!me?.isProfessor && <GuardarDocumento nome={nomeImpressao} disabled={tipo === "mini" && !disciplina} />}
       </PageTitle>
 
       {!podeVerClasse ? <p className="text-muted-foreground">Esta classe não pertence ao ciclo das suas disciplinas.</p> : tipo === "mini" && !disciplina ? <p className="text-muted-foreground">Escolha a disciplina.</p> : (
@@ -102,7 +102,7 @@ function Pautas() {
                     </tr>
                   </thead>
                   <tbody>
-                    {alunos.map((a, i) => {
+                    {alunosVisiveis.map((a, i) => {
                       const r = resumoDisciplina(classe, disciplina.nome, notasDe(a.id, disciplina.id));
                       const t3 = nt(a.id, disciplina.id, 3);
                       return (
@@ -138,7 +138,7 @@ function Pautas() {
                     <tr>{disciplinas.map((d) => qual ? <th key={d.id}>Aval.</th> : exame && Number(tri) === 3 ? [<th key={d.id + "mact3"}>MACT3</th>, <th key={d.id + "mt3"}>MT3</th>] : [<th key={d.id + "a"}>MAC</th>, <th key={d.id + "b"}>NPT</th>, <th key={d.id + "c"}>MT</th>])}</tr>
                   </thead>
                   <tbody>
-                    {alunos.map((a, i) => {
+                    {alunosVisiveis.map((a, i) => {
                       const medias = disciplinas.map((d) => {
                         const n = nt(a.id, d.id, Number(tri));
                         return { d, n, v: qual ? n?.qualitativo ?? null : mediaTrimestral(n, classe) };
@@ -177,7 +177,7 @@ function Pautas() {
                     </tr>
                   </thead>
                   <tbody>
-                    {alunos.map((a, i) => {
+                    {alunosVisiveis.map((a, i) => {
                       const res = disciplinas.map((d) => ({ d, extra: d.extra, r: resumoDisciplina(classe, d.nome, notasDe(a.id, d.id)) }));
                       const fim = resultadoFinal(classe, res);
                       return (
