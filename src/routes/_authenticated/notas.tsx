@@ -56,7 +56,7 @@ function Notas() {
   useEffect(() => { setDisc(""); }, [classe]);
   useEffect(() => {
     const m: Record<number, Linha> = {};
-    for (const a of alunosFiltrados) {
+    for (const a of visiveis) {
       const n = notas?.find((x) => x.student_id === a.id && x.subject_id === disc && x.trimestre === Number(tri));
       m[a.id] = n
         ? { mac: n.mac?.toString() ?? "", npt: n.npt?.toString() ?? "", qualitativo: n.qualitativo ?? "", exame_escrito: n.exame_escrito?.toString() ?? "", exame_oral: n.exame_oral?.toString() ?? "", faltas: String(n.faltas ?? 0) }
@@ -70,7 +70,7 @@ function Notas() {
   async function guardar() {
     if (!disciplina) return;
     const rows = [];
-    for (const a of visiveis) {
+    for (const a of alunosFiltrados) {
       const l = linhas[a.id] ?? vazia;
       const vals: (number | null)[] = [num(l.mac), num(l.npt), num(l.exame_escrito), num(l.exame_oral)];
       if (vals.some((v) => v != null && (isNaN(v) || v < 0 || v > max)))
