@@ -113,27 +113,32 @@ $$;
 
 DROP POLICY IF EXISTS "authorised read students" ON public.students;
 DROP POLICY IF EXISTS "approved read students" ON public.students;
+DROP POLICY IF EXISTS "staff and assigned teachers read students" ON public.students;
 CREATE POLICY "staff and assigned teachers read students" ON public.students
 FOR SELECT TO authenticated
 USING (public.is_staff(auth.uid()) OR public.can_view_student(auth.uid(), id) OR public.is_guardian_of(auth.uid(), id));
 
 DROP POLICY IF EXISTS "authorised read grades" ON public.grades;
 DROP POLICY IF EXISTS "approved read grades" ON public.grades;
+DROP POLICY IF EXISTS "staff assigned teachers and guardians read grades" ON public.grades;
 CREATE POLICY "staff assigned teachers and guardians read grades" ON public.grades
 FOR SELECT TO authenticated
 USING (public.can_view_grade(auth.uid(), subject_id, student_id) OR public.is_guardian_of(auth.uid(), student_id));
 
 DROP POLICY IF EXISTS "approved read assignments" ON public.teacher_assignments;
+DROP POLICY IF EXISTS "own or staff read assignments" ON public.teacher_assignments;
 CREATE POLICY "own or staff read assignments" ON public.teacher_assignments
 FOR SELECT TO authenticated
 USING (user_id = auth.uid() OR public.is_staff(auth.uid()));
 
 DROP POLICY IF EXISTS "authorised read faltas" ON public.faltas_alunos;
+DROP POLICY IF EXISTS "staff assigned teachers and guardians read faltas" ON public.faltas_alunos;
 CREATE POLICY "staff assigned teachers and guardians read faltas" ON public.faltas_alunos
 FOR SELECT TO authenticated
 USING (public.is_staff(auth.uid()) OR public.can_view_student(auth.uid(), student_id) OR public.is_guardian_of(auth.uid(), student_id));
 
 DROP POLICY IF EXISTS "adm coord write faltas" ON public.faltas_alunos;
+DROP POLICY IF EXISTS "staff write faltas" ON public.faltas_alunos;
 CREATE POLICY "staff write faltas" ON public.faltas_alunos
 FOR ALL TO authenticated
 USING (public.is_staff(auth.uid()))
