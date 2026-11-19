@@ -6,6 +6,9 @@ RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS
   SELECT false
 $$;
 
+DELETE FROM public.user_roles legacy USING public.user_roles current_professor
+WHERE legacy.user_id = current_professor.user_id
+  AND legacy.role = 'coordenador' AND current_professor.role = 'professor';
 UPDATE public.user_roles SET role = 'professor' WHERE role = 'coordenador';
 UPDATE public.profiles
 SET cargo_pretendido = 'professor'
