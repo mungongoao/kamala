@@ -33,9 +33,9 @@ function Pautas() {
     enabled: !!me?.isProfessor,
     queryFn: async () => (await supabase.from("teacher_assignments").select("subject_id,turmas, subjects(classe)").eq("user_id", me?.id ?? "")).data ?? [],
   });
-  const podeVerClasse = !me?.isProfessor || atribuicoes.some((a) => a.subjects?.classe === classe);
-  const alunosVisiveis = !me?.isProfessor ? alunos : alunos.filter((aluno) => atribuicoes.some((a) => a.subjects?.classe === classe && (!a.turmas?.length || a.turmas.includes(aluno.turma))));
-  const disciplinasMini = !me?.isProfessor ? disciplinas : disciplinas.filter((d) => atribuicoes.some((a) => a.subject_id === d.id));
+  const podeVerClasse = !me?.isProfessor || me?.isStaff || atribuicoes.some((a) => a.subjects?.classe === classe);
+  const alunosVisiveis = !me?.isProfessor || me?.isStaff ? alunos : alunos.filter((aluno) => atribuicoes.some((a) => a.subjects?.classe === classe && (!a.turmas?.length || a.turmas.includes(aluno.turma))));
+  const disciplinasMini = !me?.isProfessor || me?.isStaff ? disciplinas : disciplinas.filter((d) => atribuicoes.some((a) => a.subject_id === d.id));
   const notasDe = (aid: number, sid: string) => notas.filter((n) => n.student_id === aid && n.subject_id === sid);
   const nt = (aid: number, sid: string, t: number) => notas.find((n) => n.student_id === aid && n.subject_id === sid && n.trimestre === t);
   const qual = isQualitativa(classe);
@@ -77,8 +77,8 @@ function Pautas() {
             <SelectContent>{["1", "2", "3"].map((t) => <SelectItem key={t} value={t}>{t}º Trimestre</SelectItem>)}</SelectContent>
           </Select>
         )}
-        {!me?.isProfessor && <Button variant="outline" onClick={imprimir}><Printer className="mr-2 h-4 w-4" />Imprimir / PDF</Button>}
-        {!me?.isProfessor && <GuardarDocumento nome={nomeImpressao} disabled={tipo === "mini" && !disciplina} />}
+        {me?.isStaff && <Button variant="outline" onClick={imprimir}><Printer className="mr-2 h-4 w-4" />Imprimir / PDF</Button>}
+        {me?.isStaff && <GuardarDocumento nome={nomeImpressao} disabled={tipo === "mini" && !disciplina} />}
       </PageTitle>
 
       {!podeVerClasse ? <p className="text-muted-foreground">Esta classe não pertence ao ciclo das suas disciplinas.</p> : tipo === "mini" && !disciplina ? <p className="text-muted-foreground">Escolha a disciplina.</p> : (
