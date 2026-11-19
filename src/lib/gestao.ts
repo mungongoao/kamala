@@ -13,7 +13,6 @@ export function turmaPermitida(atribuicoes: { subject_id: string; turmas: string
   return atribuicoes.some((a) => a.subject_id === subject && (a.turmas.length === 0 || a.turmas.includes(turma)));
 }
 export function entradaExterna(path: string, autenticado: boolean, reload: boolean, visitou: boolean) {
-  if (path === "/" || path === "/reset-password") return false;
-  if (path === "/auth") return false;
+  if (path === "/reset-password" || path === "/auth") return false;
   return autenticado && !reload && !visitou;
 }
