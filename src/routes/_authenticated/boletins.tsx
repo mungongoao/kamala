@@ -36,7 +36,7 @@ function Boletins() {
     enabled: !!me?.isProfessor,
     queryFn: async () => (await supabase.from("teacher_assignments").select("turmas, subjects(classe)").eq("user_id", me?.id ?? "")).data ?? [],
   });
-  const alunosPermitidos = !me?.isProfessor ? alunos : alunos.filter((a) => atribuicoes.some((at) => at.subjects?.classe === classe && (!at.turmas?.length || at.turmas.includes(a.turma))));
+  const alunosPermitidos = !me?.isProfessor || me?.isStaff ? alunos : alunos.filter((a) => atribuicoes.some((at) => at.subjects?.classe === classe && (!at.turmas?.length || at.turmas.includes(a.turma))));
   const toggle = (id: number) => setSel((p) => p.includes(id) ? p.filter((x) => x !== id) : p.length >= 10 ? (toast.error("Pode seleccionar no máximo 10 alunos."), p) : [...p, id]);
   const filtrados = pesquisa.trim() ? alunosPermitidos.filter((a) => a.nome.toLowerCase().includes(pesquisa.trim().toLowerCase())) : alunosPermitidos;
   const lista = alunosPermitidos.filter((a) => sel.includes(a.id));
