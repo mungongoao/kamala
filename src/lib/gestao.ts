@@ -14,6 +14,6 @@ export function turmaPermitida(atribuicoes: { subject_id: string; turmas: string
 }
 export function entradaExterna(path: string, autenticado: boolean, reload: boolean, visitou: boolean) {
   if (path === "/" || path === "/reset-password") return false;
-  if (path === "/auth") return reload || !visitou;
-  return !autenticado && !visitou;
+  if (path === "/auth") return false;
+  return autenticado && !reload && !visitou;
 }
