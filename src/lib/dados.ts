@@ -34,7 +34,7 @@ export function useMe() {
         isPedagogico: tem("pedagogico"),
         isStaff: tem("admin") || tem("pedagogico"),
         podeImprimirBoletim: tem("admin") || tem("pedagogico"),
-        podeLancarFaltas: tem("admin"),
+        podeLancarFaltas: tem("admin") || tem("coordenador"),
         isProfessor: tem("professor"),
         isCoordenador: tem("coordenador"),
         podeExportarDocumentos: tem("admin") || tem("pedagogico"),
