@@ -186,7 +186,7 @@ function Atribuicoes({ user, onClose }: { user: { id: string; nome: string }; on
           </div>
         </div>
         <Select value={ciclo} onValueChange={v => {setCiclo(v);setClasse("");}}><SelectTrigger aria-label="Ciclo"><SelectValue placeholder="Ciclo" /></SelectTrigger><SelectContent><SelectItem value="primario">Ensino Primário</SelectItem><SelectItem value="primeiro">Primeiro Ciclo</SelectItem></SelectContent></Select>
-        {ciclo && <Select value={classe} onValueChange={setClasse}><SelectTrigger aria-label="Classe"><SelectValue placeholder="Classe" /></SelectTrigger><SelectContent>{ciclo === "primeiro" && <SelectItem value="todas">7ª, 8ª e 9ª Classes</SelectItem>}</SelectContent></Select>}
+        {ciclo && <Select value={classe} onValueChange={setClasse}><SelectTrigger aria-label="Classe"><SelectValue placeholder="Classe" /></SelectTrigger><SelectContent>{ciclo === "primeiro" && <SelectItem value="todas">7ª, 8ª e 9ª Classes</SelectItem>}{ciclo === "primario" && classes.map(c => <SelectItem key={c} value={c}>{nomeClasse(c)}</SelectItem>)}</SelectContent></Select>}
         <div className="space-y-3">{classes.filter(c => listadas.some(d => d.classe === c)).map(c => <section key={c}><h3 className="mb-2 font-semibold">{nomeClasse(c)}</h3>{listadas.filter(d => d.classe === c).flatMap(d => {
           const actual = atrib.find(a => a.subject_id === d.id);
           const turmas = Array.from(new Set([...alunos.filter(a => a.classe === c).map(a => a.turma), ...(actual?.turmas ?? [])])).sort();
