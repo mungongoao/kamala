@@ -16,7 +16,12 @@ BEGIN
     RAISE EXCEPTION 'Sem permissão';
   END IF;
 
-  IF public.has_role(_uid, 'coordenador')
+  IF EXISTS (
+       SELECT 1
+       FROM public.user_roles
+       WHERE user_id = _uid
+         AND role = 'coordenador'
+     )
      AND _role <> 'coordenador' THEN
     RAISE EXCEPTION 'Não é permitido alterar o cargo de um Coordenador por esta operação.';
   END IF;
