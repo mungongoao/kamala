@@ -34,9 +34,10 @@ function Boletins() {
   const { data: atribuicoes = [] } = useQuery({
     queryKey: ["atribuicoes-boletins", me?.id],
     enabled: !!me?.isProfessor,
-    queryFn: async () => (await supabase.from("teacher_assignments").select("turmas, subjects(classe)").eq("user_id", me?.id ?? "")).data ?? [],
+    queryFn: async () => (await supabase.from("teacher_assignments").select("subject_id,turmas, subjects(classe)").eq("user_id", me?.id ?? "")).data ?? [],
   });
   const alunosPermitidos = !me?.isProfessor || me?.isStaff ? alunos : alunos.filter((a) => atribuicoes.some((at) => at.subjects?.classe === classe && (!at.turmas?.length || at.turmas.includes(a.turma))));
+  const disciplinasPermitidas = !me?.isProfessor || me?.isStaff ? disciplinas : disciplinas.filter((d) => atribuicoes.some((at) => at.subjects?.classe === classe && at.subject_id === d.id));
   const toggle = (id: number) => setSel((p) => p.includes(id) ? p.filter((x) => x !== id) : p.length >= 10 ? (toast.error("Pode seleccionar no máximo 10 alunos."), p) : [...p, id]);
   const filtrados = pesquisa.trim() ? alunosPermitidos.filter((a) => a.nome.toLowerCase().includes(pesquisa.trim().toLowerCase())) : alunosPermitidos;
   const lista = alunosPermitidos.filter((a) => sel.includes(a.id));
@@ -92,7 +93,7 @@ function Boletins() {
         {paginas.map((par, pagina) => (
           <div className="duo" key={pagina}>
             {par.map((a, i) => (
-              <Boletim key={a.id} n={alunos.indexOf(a) + 1 || pagina * 2 + i + 1} aluno={a} classe={classe} tipo={tipo} inst={inst} disciplinas={disciplinas} notas={notas} faltasT={faltasT} />
+              <Boletim key={a.id} n={alunos.indexOf(a) + 1 || pagina * 2 + i + 1} aluno={a} classe={classe} tipo={tipo} inst={inst} disciplinas={disciplinasPermitidas} notas={notas} faltasT={faltasT} />
             ))}
           </div>
         ))}
