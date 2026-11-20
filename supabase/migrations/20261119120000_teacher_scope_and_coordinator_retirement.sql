@@ -130,6 +130,7 @@ AS $$
       JOIN public.subjects assigned
         ON assigned.id = ta.subject_id
        AND assigned.classe = s.classe
+       AND assigned.id = _subject
       WHERE s.id = _student
         AND public.has_role(_uid, 'professor')
         AND (
@@ -139,8 +140,8 @@ AS $$
     );
 $$;
 
--- A professor assigned to a class can consult its full grade sheet,
--- while Coordinators and staff retain their access.
+-- A professor can consult only the subject and class/turma assigned to them.
+-- Coordinators and staff retain their access.
 CREATE OR REPLACE FUNCTION public.can_view_grade(
   _uid uuid,
   _subject uuid,
