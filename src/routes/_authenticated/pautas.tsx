@@ -64,7 +64,7 @@ function Pautas() {
       <PageTitle title="Pautas">
         <Tabs value={tipo} onValueChange={setTipo}>
           <TabsList><TabsTrigger value="mini">Mini-Pauta</TabsTrigger><TabsTrigger value="tri">Trimestral</TabsTrigger><TabsTrigger value="final">Final</TabsTrigger></TabsList>
-        </Tabs>}
+        </Tabs>
         <ClasseSelect value={classe} onChange={(v) => { setClasse(v); setDisc(""); }} />
         {tipo === "mini" && (
           <Select value={disc} onValueChange={setDisc}>
