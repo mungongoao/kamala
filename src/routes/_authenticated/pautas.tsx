@@ -36,6 +36,7 @@ function Pautas() {
   const podeVerClasse = !me?.isProfessor || me?.isStaff || atribuicoes.some((a) => a.subjects?.classe === classe);
   const alunosVisiveis = !me?.isProfessor || me?.isStaff ? alunos : alunos.filter((aluno) => atribuicoes.some((a) => a.subjects?.classe === classe && (!a.turmas?.length || a.turmas.includes(aluno.turma))));
   const disciplinasMini = !me?.isProfessor || me?.isStaff ? disciplinas : disciplinas.filter((d) => atribuicoes.some((a) => a.subject_id === d.id));
+  const disciplinasVisiveis = !me?.isProfessor || me?.isStaff ? disciplinas : disciplinasMini;
   const notasDe = (aid: number, sid: string) => notas.filter((n) => n.student_id === aid && n.subject_id === sid);
   const nt = (aid: number, sid: string, t: number) => notas.find((n) => n.student_id === aid && n.subject_id === sid && n.trimestre === t);
   const qual = isQualitativa(classe);
@@ -63,7 +64,7 @@ function Pautas() {
       <PageTitle title="Pautas">
         <Tabs value={tipo} onValueChange={setTipo}>
           <TabsList><TabsTrigger value="mini">Mini-Pauta</TabsTrigger><TabsTrigger value="tri">Trimestral</TabsTrigger><TabsTrigger value="final">Final</TabsTrigger></TabsList>
-        </Tabs>}
+        </Tabs>
         <ClasseSelect value={classe} onChange={(v) => { setClasse(v); setDisc(""); }} />
         {tipo === "mini" && (
           <Select value={disc} onValueChange={setDisc}>
@@ -131,15 +132,15 @@ function Pautas() {
                   <thead>
                     <tr>
                       <th rowSpan={2}>Nº</th><th rowSpan={2}>Nome do Aluno</th><th rowSpan={2}>G</th>
-                      {disciplinas.map((d) => <th key={d.id} colSpan={qual ? 1 : exame && Number(tri) === 3 ? 2 : 3}>{d.nome}{d.extra ? "*" : ""}</th>)}
+                      {disciplinasVisiveis.map((d) => <th key={d.id} colSpan={qual ? 1 : exame && Number(tri) === 3 ? 2 : 3}>{d.nome}{d.extra ? "*" : ""}</th>)}
                       {!qual && <th rowSpan={2}>MFD</th>}
                       <th rowSpan={2}>Resultado</th>
                     </tr>
-                    <tr>{disciplinas.map((d) => qual ? <th key={d.id}>Aval.</th> : exame && Number(tri) === 3 ? [<th key={d.id + "mact3"}>MACT3</th>, <th key={d.id + "mt3"}>MT3</th>] : [<th key={d.id + "a"}>MAC</th>, <th key={d.id + "b"}>NPT</th>, <th key={d.id + "c"}>MT</th>])}</tr>
+                    <tr>{disciplinasVisiveis.map((d) => qual ? <th key={d.id}>Aval.</th> : exame && Number(tri) === 3 ? [<th key={d.id + "mact3"}>MACT3</th>, <th key={d.id + "mt3"}>MT3</th>] : [<th key={d.id + "a"}>MAC</th>, <th key={d.id + "b"}>NPT</th>, <th key={d.id + "c"}>MT</th>])}</tr>
                   </thead>
                   <tbody>
                     {alunosVisiveis.map((a, i) => {
-                      const medias = disciplinas.map((d) => {
+                      const medias = disciplinasVisiveis.map((d) => {
                         const n = nt(a.id, d.id, Number(tri));
                         return { d, n, v: qual ? n?.qualitativo ?? null : mediaTrimestral(n, classe) };
                       });
@@ -166,19 +167,19 @@ function Pautas() {
                   <thead>
                     <tr>
                       <th rowSpan={2}>Nº</th><th rowSpan={2}>Nome do Aluno</th><th rowSpan={2}>G</th>
-                      {disciplinas.map((d) => <th key={d.id} colSpan={qual ? 1 : 3}>{d.nome}{d.extra ? "*" : ""}</th>)}
+                      {disciplinasVisiveis.map((d) => <th key={d.id} colSpan={qual ? 1 : 3}>{d.nome}{d.extra ? "*" : ""}</th>)}
                       {!qual && <th rowSpan={2}>MF</th>}
                       <th rowSpan={2}>Resultado Final</th>
                     </tr>
                     <tr>
-                      {disciplinas.map((d) => qual ? <th key={d.id}>Aval.</th> : [
+                      {disciplinasVisiveis.map((d) => qual ? <th key={d.id}>Aval.</th> : [
                         ...(exame ? [<th key={d.id + 5}>NE</th>, <th key={d.id + 4}>MFD</th>, <th key={d.id + 6}>MF</th>] : [<th key={d.id + 1}>MT1</th>, <th key={d.id + 2}>MT2</th>, <th key={d.id + 3}>MT3</th>]),
                       ])}
                     </tr>
                   </thead>
                   <tbody>
                     {alunosVisiveis.map((a, i) => {
-                      const res = disciplinas.map((d) => ({ d, extra: d.extra, r: resumoDisciplina(classe, d.nome, notasDe(a.id, d.id)) }));
+                      const res = disciplinasVisiveis.map((d) => ({ d, extra: d.extra, r: resumoDisciplina(classe, d.nome, notasDe(a.id, d.id)) }));
                       const fim = resultadoFinal(classe, res);
                       return (
                         <tr key={a.id}>

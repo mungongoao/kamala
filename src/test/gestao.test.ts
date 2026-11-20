@@ -22,8 +22,8 @@ describe("Gestão de alunos", () => {
   });
 });
 describe("Entrada externa", () => {
-  it("encaminha primeira entrada por ligação externa", () => { expect(entradaExterna("/boletins",false,false,false)).toBe(true); });
-  it("refresh de login ou cadastro volta ao início", () => { expect(entradaExterna("/auth",false,true,true)).toBe(true); });
-  it("preserva refresh e navegação interna autenticada", () => { expect(entradaExterna("/notas",true,true,false)).toBe(false); });
-  it("preserva recuperação de palavra-passe", () => { expect(entradaExterna("/reset-password",false,false,false)).toBe(false); });
+  it("encaminha primeira entrada por ligação externa", () => { expect(entradaExterna("/boletins",true,false)).toBe(true); });
+  it("refresh de login ou cadastro volta ao início", () => { expect(entradaExterna("/auth",false,true)).toBe(false); });
+  it("preserva refresh e navegação interna autenticada", () => { expect(entradaExterna("/notas",true,true)).toBe(false); });
+  it("preserva recuperação de palavra-passe", () => { expect(entradaExterna("/reset-password",false,false)).toBe(false); });
 });

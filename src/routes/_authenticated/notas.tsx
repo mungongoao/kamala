@@ -10,7 +10,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { turmaPermitida } from "@/lib/gestao";
 import { TurmaSelect } from "@/components/turma-select";
 import { ClasseSelect, PageTitle } from "@/components/escola";
 
@@ -44,7 +43,12 @@ function Notas() {
     () => (disciplinas ?? []).filter((d) => me?.isStaff || me?.isCoordenador || atrib?.some((a) => a.subject_id === d.id)),
     [disciplinas, atrib, me],
   );
-  const visiveis = useMemo(() => (alunos ?? []).filter(a => (turma === "todas" || a.turma === turma) && (me?.isStaff || me?.isCoordenador || turmaPermitida(atrib ?? [], disc, a.turma))), [alunos,turma,me,atrib,disc]);
+  const visiveis = useMemo(() => (alunos ?? []).filter((a) => {
+    if (turma !== "todas" && a.turma !== turma) return false;
+    if (me?.isStaff || me?.isCoordenador) return true;
+    const atribuicoesDaClasse = (atrib ?? []).filter((at) => disc ? at.subject_id === disc : permitidas.some((d) => d.id === at.subject_id));
+    return atribuicoesDaClasse.some((at) => !at.turmas?.length || at.turmas.includes(a.turma));
+  }), [alunos, turma, me, atrib, permitidas]);
   const disciplina = permitidas.find((d) => d.id === disc);
   const alunosFiltrados = visiveis.filter((a) => !pesquisa.trim() || a.nome.toLocaleLowerCase("pt").includes(pesquisa.trim().toLocaleLowerCase("pt")));
   const max = escalaMax(classe);
