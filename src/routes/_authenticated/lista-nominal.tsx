@@ -68,7 +68,7 @@ function Lista() {
         {podeF && <Button onClick={guardarFaltas}>Guardar faltas</Button>}
         {me?.isStaff && <Button variant="outline" onClick={imprimir}><Printer className="mr-2 h-4 w-4" />Imprimir</Button>}
       </PageTitle>
-      <div className="print-area overflow-auto">
+      <div className={me?.isStaff ? "print-area overflow-auto" : "print:hidden overflow-auto"}>
         <div className="doc doc-a4 mx-auto shadow" >
           <DocCabecalho inst={inst} titulo="Lista Nominal" sub={`${nomeClasse(classe)} · Turma ${turma} · Ano lectivo ${inst?.ano_lectivo ?? ""}`} />
           <table>
