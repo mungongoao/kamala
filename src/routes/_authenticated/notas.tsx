@@ -10,7 +10,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { turmaPermitida } from "@/lib/gestao";
 import { TurmaSelect } from "@/components/turma-select";
 import { ClasseSelect, PageTitle } from "@/components/escola";
 
@@ -47,7 +46,7 @@ function Notas() {
   const visiveis = useMemo(() => (alunos ?? []).filter((a) => {
     if (turma !== "todas" && a.turma !== turma) return false;
     if (me?.isStaff || me?.isCoordenador) return true;
-    const atribuicoesDaClasse = (atrib ?? []).filter((at) => permitidas.some((d) => d.id === at.subject_id));
+    const atribuicoesDaClasse = (atrib ?? []).filter((at) => disc ? at.subject_id === disc : permitidas.some((d) => d.id === at.subject_id));
     return atribuicoesDaClasse.some((at) => at.turmas.length === 0 || at.turmas.includes(a.turma));
   }), [alunos, turma, me, atrib, permitidas]);
   const disciplina = permitidas.find((d) => d.id === disc);
