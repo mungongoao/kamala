@@ -7,7 +7,7 @@ export type Papel = "admin" | "pedagogico" | "coordenador" | "professor" | "enca
 export const NOMES_PAPEL: Record<Papel, string> = {
   admin: "Administrador (ADM)",
   pedagogico: "Pedagógico",
-  coordenador: "Professor",
+  coordenador: "Coordenador",
   professor: "Professor",
   encarregado: "Encarregado de Educação",
 };
@@ -22,7 +22,7 @@ export function useMe() {
         supabase.from("profiles").select("*").eq("id", u.user.id).maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", u.user.id),
       ]);
-      const papeis = (roles ?? []).map((r) => (r.role === "coordenador" ? "professor" : r.role) as Papel);
+      const papeis = (roles ?? []).map((r) => r.role as Papel);
       const aprovado = profile?.status === "APROVADO" && !profile?.deleted_at;
       const tem = (p: Papel) => aprovado && papeis.includes(p);
       return {
@@ -36,7 +36,7 @@ export function useMe() {
         podeImprimirBoletim: tem("admin") || tem("pedagogico"),
         podeLancarFaltas: tem("admin"),
         isProfessor: tem("professor"),
-        isCoordenador: false,
+        isCoordenador: tem("coordenador"),
         podeExportarDocumentos: tem("admin") || tem("pedagogico"),
         isEncarregado: tem("encarregado"),
       };
