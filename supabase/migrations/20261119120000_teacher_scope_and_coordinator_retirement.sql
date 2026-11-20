@@ -26,7 +26,6 @@ BEGIN
       RAISE EXCEPTION 'Não é permitido alterar o cargo de um Coordenador por esta operação.';
     END IF;
 
-    -- Never delete/recreate a Coordinator's roles: they may hold additional permissions.
     RETURN;
   END IF;
 
@@ -49,7 +48,6 @@ END;
 $$;
 
 -- Prevent overlapping class assignments for the same subject.
--- The transaction lock prevents two concurrent requests from bypassing the check.
 CREATE OR REPLACE FUNCTION public.prevent_duplicate_teacher_assignment()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -112,7 +110,6 @@ FOR EACH ROW
 EXECUTE FUNCTION public.prevent_duplicate_teacher_assignment();
 
 -- A professor may see students only in classes/turmas covered by their assignments.
--- Staff and Coordinators retain their access.
 CREATE OR REPLACE FUNCTION public.can_view_student(_uid uuid, _student bigint)
 RETURNS boolean
 LANGUAGE sql
@@ -130,7 +127,6 @@ AS $$
       JOIN public.subjects assigned
         ON assigned.id = ta.subject_id
        AND assigned.classe = s.classe
-       AND assigned.id = _subject
       WHERE s.id = _student
         AND public.has_role(_uid, 'professor')
         AND (
@@ -141,7 +137,6 @@ AS $$
 $$;
 
 -- A professor can consult only the subject and class/turma assigned to them.
--- Coordinators and staff retain their access.
 CREATE OR REPLACE FUNCTION public.can_view_grade(
   _uid uuid,
   _subject uuid,
@@ -166,6 +161,7 @@ AS $$
       JOIN public.subjects assigned
         ON assigned.id = ta.subject_id
        AND assigned.classe = s.classe
+       AND assigned.id = _subject
       WHERE s.id = _student
         AND public.has_role(_uid, 'professor')
         AND (
@@ -192,8 +188,7 @@ USING (
   )
 );
 
--- Restrict grade-sheet reads to the assigned class/turma, while preserving
--- guardian, staff, and Coordinator access.
+-- Restrict grade-sheet reads to the assigned class/turma.
 DROP POLICY IF EXISTS "authorised read grades" ON public.grades;
 DROP POLICY IF EXISTS "staff assigned teachers and guardians read grades" ON public.grades;
 
@@ -205,8 +200,7 @@ USING (
   OR public.is_guardian_of(auth.uid(), student_id)
 );
 
--- Approved users no longer receive a global listing of every teacher assignment.
--- Each teacher sees their own; staff and Coordinators can see all.
+-- Each teacher sees their own assignments; staff and Coordinators can see all.
 DROP POLICY IF EXISTS "approved read assignments" ON public.teacher_assignments;
 DROP POLICY IF EXISTS "own or staff read assignments" ON public.teacher_assignments;
 
@@ -232,8 +226,7 @@ USING (
   OR public.is_guardian_of(auth.uid(), student_id)
 );
 
--- Deliberately preserve the existing Coordinator write policy on faltas_alunos.
--- No Coordinator role, helper, enum value, or permission is removed or rewritten.
+-- Preserve existing Coordinator write permissions on faltas_alunos.
 
 GRANT EXECUTE ON FUNCTION public.can_view_student(uuid, bigint)
   TO authenticated, service_role;
