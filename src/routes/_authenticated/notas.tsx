@@ -47,7 +47,7 @@ function Notas() {
     if (turma !== "todas" && a.turma !== turma) return false;
     if (me?.isStaff || me?.isCoordenador) return true;
     const atribuicoesDaClasse = (atrib ?? []).filter((at) => disc ? at.subject_id === disc : permitidas.some((d) => d.id === at.subject_id));
-    return atribuicoesDaClasse.some((at) => at.turmas.length === 0 || at.turmas.includes(a.turma));
+    return atribuicoesDaClasse.some((at) => !at.turmas?.length || at.turmas.includes(a.turma));
   }), [alunos, turma, me, atrib, permitidas]);
   const disciplina = permitidas.find((d) => d.id === disc);
   const alunosFiltrados = visiveis.filter((a) => !pesquisa.trim() || a.nome.toLocaleLowerCase("pt").includes(pesquisa.trim().toLocaleLowerCase("pt")));
