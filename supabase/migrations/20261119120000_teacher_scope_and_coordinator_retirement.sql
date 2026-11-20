@@ -17,13 +17,17 @@ BEGIN
   END IF;
 
   IF EXISTS (
-       SELECT 1
-       FROM public.user_roles
-       WHERE user_id = _uid
-         AND role = 'coordenador'
-     )
-     AND _role <> 'coordenador' THEN
-    RAISE EXCEPTION 'Não é permitido alterar o cargo de um Coordenador por esta operação.';
+    SELECT 1
+    FROM public.user_roles
+    WHERE user_id = _uid
+      AND role = 'coordenador'
+  ) THEN
+    IF _role <> 'coordenador' THEN
+      RAISE EXCEPTION 'Não é permitido alterar o cargo de um Coordenador por esta operação.';
+    END IF;
+
+    -- Never delete/recreate a Coordinator's roles: they may hold additional permissions.
+    RETURN;
   END IF;
 
   IF _role = 'admin' AND NOT public.has_role(auth.uid(), 'admin') THEN
