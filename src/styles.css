@@ -179,7 +179,7 @@ h1, h2, h3 { font-family: var(--font-serif); }
 .doc th, .doc td { border: 1px solid black; padding: 2px 4px; text-align: center; font-size: 12pt; }
 .doc td.esq { text-align: left; }
 .doc-a5 { width: 148mm; min-height: 210mm; padding: 8mm; page: boletim; box-sizing: border-box; }
-.doc-a4 { width: 210mm; min-height: 297mm; padding: 8mm; page: a4; box-sizing: border-box; }
+.doc-a4 { width: 297mm; min-height: 210mm; padding: 6mm; page: a4; box-sizing: border-box; }
 .doc-a3 { width: 420mm; min-height: 297mm; padding: 8mm; page: a3; box-sizing: border-box; }
 .neg { color: var(--grade-negative); }
 .pos { color: var(--grade-positive); }
@@ -190,7 +190,7 @@ h1, h2, h3 { font-family: var(--font-serif); }
 .auth-brand { border-bottom: 1px solid var(--border); }
 
 @page boletim { size: A5 portrait; margin: 0; }
-@page a4 { size: A4 portrait; margin: 0; }
+@page a4 { size: A4 landscape; margin: 0; }
 @page a3 { size: A3 landscape; margin: 0; }
 @page duo { size: A4 landscape; margin: 0; }
 .duo { display: flex; gap: 0; page: duo; }
@@ -215,3 +215,14 @@ h1, h2, h3 { font-family: var(--font-serif); }
 .boletim-visto > div { min-width: 0 !important; }
 .boletim-instituicao { overflow-wrap: anywhere; }
 .doc h1, .doc h2, .doc h3 { text-transform: uppercase; font-weight: 700; }
+
+/* Mini-pauta: A4 horizontal, nomes completos numa única linha e colunas proporcionais. */
+.mini-pauta table { width: 100%; table-layout: fixed; }
+.mini-pauta th, .mini-pauta td { font-size: 8pt; padding: 1px 2px; }
+.mini-pauta th:nth-child(2), .mini-pauta td:nth-child(2) { width: 42mm; white-space: nowrap; font-size: 8.5pt; }
+@media print {
+  .mini-pauta { width: 297mm !important; min-height: 210mm !important; padding: 6mm !important; overflow: visible !important; page: a4; }
+  .mini-pauta table { width: 100% !important; table-layout: fixed !important; }
+  .mini-pauta th, .mini-pauta td { font-size: 8pt !important; padding: 1px 2px !important; }
+  .mini-pauta th:nth-child(2), .mini-pauta td:nth-child(2) { width: 42mm !important; white-space: nowrap !important; font-size: 8.5pt !important; }
+}
