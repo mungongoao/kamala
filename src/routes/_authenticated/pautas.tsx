@@ -84,7 +84,7 @@ function Pautas() {
 
       {!podeVerClasse ? <p className="text-muted-foreground">Esta classe não pertence ao ciclo das suas disciplinas.</p> : tipo === "mini" && !disciplina ? <p className="text-muted-foreground">Escolha a disciplina.</p> : (
         <div className="print-area overflow-auto">
-          <div className={`doc mx-auto shadow ${tipo === "mini" ? "doc-a4" : "doc-a3"}`}>
+          <div className={`doc mx-auto shadow ${tipo === "mini" ? "doc-a4 mini-pauta" : "doc-a3"}`}>
             <DocCabecalho inst={inst} titulo={titulo} sub={sub} />
             <table>
               {tipo === "mini" && disciplina && (
