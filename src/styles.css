@@ -287,3 +287,11 @@ h1, h2, h3 { font-family: var(--font-serif); }
   .mini-pauta .mt-8 { margin-top: 3mm !important; }
   .doc-a4.mini-pauta { break-after: auto !important; }
 }
+
+
+/* Norma tipográfica institucional: todos os documentos em Times New Roman, 12 pt. */
+.doc,
+.doc * {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 12pt !important;
+}
