@@ -71,7 +71,7 @@ function Utilizadores() {
   return (
     <div>
       <PageTitle title="Gestão de Utilizadores"><Button variant="outline" onClick={() => window.location.assign("/lixo")}>Lixo</Button></PageTitle>
-      <TeacherAccessManager />
+      {me.isAdmin && <TeacherAccessManager />}
       <Table>
         <TableHeader><TableRow><TableHead>Nome</TableHead><TableHead>Email</TableHead><TableHead>Estado</TableHead><TableHead>Cargo</TableHead><TableHead className="text-right">Acções</TableHead></TableRow></TableHeader>
         <TableBody>
