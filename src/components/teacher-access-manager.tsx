@@ -48,7 +48,8 @@ export function TeacherAccessManager() {
   }
   function openDays(t:any) { setDays(t.access?.allowed_weekdays??[1,2,3,4,5,6,7]); setSelected(t); }
   async function saveDays() { if(!selected)return; await setOne(selected.id,selected.access?.enabled??true,days); setSelected(null); }
-  const limit = [6,7].includes(Number(new Intl.DateTimeFormat("en",{timeZone:"Africa/Luanda",weekday:"short"}).format(new Date())==="Sat"?6:new Intl.DateTimeFormat("en",{timeZone:"Africa/Luanda",weekday:"short"}).format(new Date())==="Sun"?7:0))?5400:3600;
+  const weekday = new Intl.DateTimeFormat("en-US",{timeZone:"Africa/Luanda",weekday:"short"}).format(new Date());
+  const limit = weekday === "Sat" || weekday === "Sun" ? 5400 : 3600;
   return <section className="mb-6 space-y-3 rounded-lg border bg-card p-4">
     <div className="flex flex-wrap items-center justify-between gap-2">
       <div><h2 className="font-semibold">Autorização e tempo dos Professores</h2><p className="text-xs text-muted-foreground">60 min de segunda a sexta · 90 min ao sábado e domingo. Os Coordenadores ficam excluídos.</p></div>
