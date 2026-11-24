@@ -91,7 +91,7 @@ END $$;
 CREATE OR REPLACE FUNCTION public.set_teacher_access(_uid uuid,_enabled boolean,_allowed_weekdays smallint[] DEFAULT NULL)
 RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
 BEGIN
- IF NOT public.is_staff(auth.uid()) THEN RAISE EXCEPTION 'Sem permissão.'; END IF;
+ IF NOT public.has_role(auth.uid(),'admin') THEN RAISE EXCEPTION 'Só o ADM pode gerir a autorização dos Professores.'; END IF;
  IF NOT public.has_role(_uid,'professor') THEN RAISE EXCEPTION 'Utilizador não é Professor.'; END IF;
  IF public.has_role(_uid,'coordenador') THEN RAISE EXCEPTION 'O Coordenador está protegido.'; END IF;
  IF _allowed_weekdays IS NOT NULL AND (cardinality(_allowed_weekdays)>7 OR EXISTS(SELECT 1 FROM unnest(_allowed_weekdays) n WHERE n<1 OR n>7)) THEN RAISE EXCEPTION 'Dias inválidos.'; END IF;
@@ -107,7 +107,7 @@ CREATE OR REPLACE FUNCTION public.set_all_teachers_access(_enabled boolean)
 RETURNS integer LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
 DECLARE n integer;
 BEGIN
- IF NOT public.is_staff(auth.uid()) THEN RAISE EXCEPTION 'Sem permissão.'; END IF;
+ IF NOT public.has_role(auth.uid(),'admin') THEN RAISE EXCEPTION 'Só o ADM pode gerir a autorização dos Professores.'; END IF;
  INSERT INTO public.teacher_access_control(user_id,enabled)
  SELECT DISTINCT ur.user_id,_enabled FROM public.user_roles ur WHERE ur.role='professor' AND NOT public.has_role(ur.user_id,'coordenador')
  ON CONFLICT(user_id) DO UPDATE SET enabled=EXCLUDED.enabled,updated_at=now(),updated_by=auth.uid();
@@ -154,8 +154,8 @@ GRANT EXECUTE ON FUNCTION public.teacher_usage_pause() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.set_teacher_access(uuid,boolean,smallint[]) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.set_all_teachers_access(boolean) TO authenticated;
 CREATE POLICY "staff read teacher access controls" ON public.teacher_access_control
- FOR SELECT TO authenticated USING (public.is_staff(auth.uid()));
+ FOR SELECT TO authenticated USING (public.has_role(auth.uid(), 'admin'));
 CREATE POLICY "staff read teacher daily usage" ON public.teacher_daily_usage
- FOR SELECT TO authenticated USING (public.is_staff(auth.uid()));
+ FOR SELECT TO authenticated USING (public.has_role(auth.uid(), 'admin'));
 
 COMMIT;
