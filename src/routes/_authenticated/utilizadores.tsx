@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PageTitle } from "@/components/escola";
+import { TeacherAccessManager } from "@/components/teacher-access-manager";
 
 export const Route = createFileRoute("/_authenticated/utilizadores")({
   head: () => ({ meta: [{ title: "Utilizadores — KAMALA" }, { name: "description", content: "Gestão de utilizadores." }] }),
@@ -70,6 +71,7 @@ function Utilizadores() {
   return (
     <div>
       <PageTitle title="Gestão de Utilizadores"><Button variant="outline" onClick={() => window.location.assign("/lixo")}>Lixo</Button></PageTitle>
+      {me.isAdmin && <TeacherAccessManager />}
       <Table>
         <TableHeader><TableRow><TableHead>Nome</TableHead><TableHead>Email</TableHead><TableHead>Estado</TableHead><TableHead>Cargo</TableHead><TableHead className="text-right">Acções</TableHead></TableRow></TableHeader>
         <TableBody>

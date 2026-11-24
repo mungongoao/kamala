@@ -5,6 +5,7 @@ import { useMe, useInstituicao, NOMES_PAPEL } from "@/lib/dados";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { MessageCircle } from "lucide-react";
+import { TeacherUsageTimer } from "@/components/teacher-usage-timer";
 import {
   LayoutDashboard, Settings, BookOpen, UserPlus, ListOrdered, PenLine, Table2, FileText, Users, LogOut, TrendingUp, BarChart3, Trash2,
 } from "lucide-react";
@@ -125,7 +126,7 @@ function Layout() {
       <main className="flex min-w-0 flex-1 flex-col overflow-x-auto">
         <header className="z-20 flex flex-wrap md:sticky items-center justify-between gap-2 border-b bg-[var(--tema-principal)] px-3 py-3 text-white shadow sm:px-6 print:hidden md:top-0">
           <div className="min-w-0 text-base font-bold leading-tight sm:text-lg md:text-xl">{inst?.nome_escola}</div>
-          <span className="shrink-0 rounded-full bg-background px-3 py-1 text-xs font-semibold text-primary sm:text-sm">Ano lectivo {inst?.ano_lectivo}</span>
+          <div className="flex flex-wrap items-center gap-2"><TeacherUsageTimer /><span className="shrink-0 rounded-full bg-background px-3 py-1 text-xs font-semibold text-primary sm:text-sm">Ano lectivo {inst?.ano_lectivo}</span></div>
         </header>
         <div className="flex-1 p-3 sm:p-6"><Outlet /></div>
         {mostrarDireitos && (
