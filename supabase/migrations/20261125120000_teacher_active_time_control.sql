@@ -152,4 +152,9 @@ GRANT EXECUTE ON FUNCTION public.teacher_usage_heartbeat() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.teacher_usage_pause() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.set_teacher_access(uuid,boolean,smallint[]) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.set_all_teachers_access(boolean) TO authenticated;
+CREATE POLICY "staff read teacher access controls" ON public.teacher_access_control
+ FOR SELECT TO authenticated USING (public.is_staff(auth.uid()));
+CREATE POLICY "staff read teacher daily usage" ON public.teacher_daily_usage
+ FOR SELECT TO authenticated USING (public.is_staff(auth.uid()));
+
 COMMIT;
