@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_authenticated/pautas")({
 
 // Nome abreviado apenas na apresentação da mini-pauta; o registo original permanece intacto.
 function nomeMiniPauta(nome: string) {
-  const partes = nome.trim().split(/\\s+/).filter(Boolean);
+  const partes = nome.trim().split(/\s+/).filter(Boolean);
   if (partes.length <= 2) return nome;
   const apelidos = partes.length >= 4 ? partes.slice(-2) : partes.slice(-1);
   const intermédios = partes.slice(1, partes.length - apelidos.length).map((parte) => `${parte.charAt(0).toLocaleUpperCase("pt-PT")}.`);
