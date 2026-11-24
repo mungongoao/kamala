@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS public.teacher_daily_usage (
 ALTER TABLE public.teacher_access_control ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.teacher_daily_usage ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON public.teacher_access_control, public.teacher_daily_usage FROM anon, authenticated;
+GRANT SELECT ON public.teacher_access_control, public.teacher_daily_usage TO authenticated;
 GRANT ALL ON public.teacher_access_control, public.teacher_daily_usage TO service_role;
 INSERT INTO public.teacher_access_control(user_id)
  SELECT DISTINCT user_id FROM public.user_roles
