@@ -18,6 +18,16 @@ export const Route = createFileRoute("/_authenticated/pautas")({
   component: Pautas,
 });
 
+
+// Nome abreviado apenas na apresentação da mini-pauta; o registo original permanece intacto.
+function nomeMiniPauta(nome: string) {
+  const partes = nome.trim().split(/\s+/).filter(Boolean);
+  if (partes.length <= 2) return nome;
+  const apelidos = partes.length >= 4 ? partes.slice(-2) : partes.slice(-1);
+  const intermédios = partes.slice(1, partes.length - apelidos.length).map((parte) => `${parte.charAt(0).toLocaleUpperCase("pt-PT")}.`);
+  return [partes[0], ...intermédios, ...apelidos].join(" ");
+}
+
 function Pautas() {
   const { data: me } = useMe();
   const [tipo, setTipo] = useState("mini");
@@ -108,7 +118,7 @@ function Pautas() {
                       const t3 = nt(a.id, disciplina.id, 3);
                       return (
                         <tr key={a.id}>
-                          <td>{i + 1}</td><td className="esq">{a.nome}</td><td>{a.genero}</td>
+                          <td>{i + 1}</td><td className="esq" title={a.nome}>{nomeMiniPauta(a.nome)}</td><td>{a.genero}</td>
                           {[1, 2, 3].map((t) => {
                             const n = nt(a.id, disciplina.id, t);
                             if (qual) return <td key={t}>{n?.qualitativo ?? "—"}</td>;
