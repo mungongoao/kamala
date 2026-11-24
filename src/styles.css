@@ -226,3 +226,64 @@ h1, h2, h3 { font-family: var(--font-serif); }
   .mini-pauta th, .mini-pauta td { font-size: 8pt !important; padding: 1px 2px !important; }
   .mini-pauta th:nth-child(2), .mini-pauta td:nth-child(2) { width: 42mm !important; white-space: nowrap !important; font-size: 8.5pt !important; }
 }
+
+
+/* Retificação definitiva da mini-pauta: nomes em linha única e impressão A4. */
+.mini-pauta table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.mini-pauta th:first-child, .mini-pauta td:first-child { width: 8mm; }
+.mini-pauta th:nth-child(2), .mini-pauta td:nth-child(2) {
+  width: 58mm !important;
+  max-width: 58mm;
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 7.5pt;
+  text-align: left;
+}
+.mini-pauta th:nth-child(3), .mini-pauta td:nth-child(3) { width: 8mm; }
+.mini-pauta th, .mini-pauta td {
+  box-sizing: border-box;
+  padding: 1px 2px;
+  font-size: 7pt;
+  line-height: 1.05;
+  white-space: nowrap;
+  overflow: hidden;
+}
+@media print {
+  @page a4 { size: A4 landscape; margin: 0; }
+  .print-area { overflow: visible !important; }
+  .mini-pauta {
+    width: 297mm !important;
+    min-height: 210mm !important;
+    max-width: 297mm !important;
+    padding: 5mm !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    page: a4;
+    break-before: avoid !important;
+    break-after: auto !important;
+    break-inside: avoid !important;
+    box-shadow: none !important;
+  }
+  .mini-pauta table { width: 100% !important; table-layout: fixed !important; }
+  .mini-pauta th, .mini-pauta td {
+    padding: 0.7px 1.5px !important;
+    font-size: 6.8pt !important;
+    line-height: 1 !important;
+  }
+  .mini-pauta th:nth-child(2), .mini-pauta td:nth-child(2) {
+    width: 58mm !important;
+    max-width: 58mm !important;
+    font-size: 7.2pt !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .mini-pauta .mt-8 { margin-top: 3mm !important; }
+  .doc-a4.mini-pauta { break-after: auto !important; }
+}
