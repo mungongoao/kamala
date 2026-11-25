@@ -75,6 +75,7 @@ function Layout() {
     { to: "/boletins", label: "Boletins", icon: FileText, show: !me.isEncarregado },
     { to: "/estatisticas", label: "Estatísticas", icon: BarChart3, show: me.isStaff || me.isProfessor },
     { to: "/utilizadores", label: "Utilizadores", icon: Users, show: me.isStaff },
+    { to: "/lixo", label: "Lixo", icon: Trash2, show: me.isStaff },
   ] as const;
 
   const sairBotao = (cls: string, texto: boolean) => (
@@ -116,7 +117,6 @@ function Layout() {
               <l.icon className="h-4 w-4 shrink-0" /> <span>{l.label}</span>
             </Link>
           ))}
-          {me.isStaff && <a href="/lixo" className="flex shrink-0 snap-start items-center gap-2 whitespace-nowrap rounded-md px-3 py-2 text-sm hover:bg-sidebar-accent md:gap-3"><Trash2 className="h-4 w-4 shrink-0" /><span>Lixo</span></a>}
         </nav>
         <div className="hidden border-t border-sidebar-border p-4 text-xs md:block">
           <div><div className="font-medium">{me.profile?.nome}</div><div className="opacity-70">{me.papeis.map((p) => NOMES_PAPEL[p]).join(", ")}</div></div>
