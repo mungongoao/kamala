@@ -20,13 +20,22 @@ export function TeacherUsageTimer() {
   const busy = useRef(false);
   const lastActivity = useRef(Date.now());
 
+  const errorText = (error: unknown) => {
+    if (!error || typeof error !== "object") return String(error || "Erro desconhecido.");
+    const e = error as { message?: string; details?: string; hint?: string; code?: string };
+    return [e.message, e.details, e.hint, e.code ? `Código: ${e.code}` : ""].filter(Boolean).join(" — ") || "Erro desconhecido.";
+  };
+
   const pause = useCallback(async () => {
     if (!active.current || busy.current) return;
     busy.current = true;
     try {
-      await (supabase as any).rpc("teacher_usage_pause");
+      const { error } = await (supabase as any).rpc("teacher_usage_pause");
+      if (error) throw error;
       active.current = false;
       setUsage((old) => old ? { ...old, session_active: false } : old);
+    } catch (error) {
+      setMessage(`Falha ao pausar: ${errorText(error)}`);
     } finally {
       busy.current = false;
     }
@@ -39,15 +48,14 @@ export function TeacherUsageTimer() {
       const { data, error } = await (supabase as any).rpc("teacher_usage_start");
       if (error) throw error;
       const row = Array.isArray(data) ? data[0] : data;
-      if (row) {
-        setUsage(row);
-        setRemaining(row.remaining_seconds);
-        active.current = !!row.session_active;
-        setMessage("");
-      }
+      if (!row) throw new Error("A função teacher_usage_start não devolveu dados. Verifique se a versão publicada contém a migração e a função RPC.");
+      setUsage(row);
+      setRemaining(row.remaining_seconds);
+      active.current = !!row.session_active;
+      setMessage("");
     } catch (error) {
       active.current = false;
-      setMessage((error as Error).message || "Acesso não autorizado.");
+      setMessage(`Falha ao iniciar: ${errorText(error)}`);
     } finally {
       busy.current = false;
     }
@@ -78,7 +86,7 @@ export function TeacherUsageTimer() {
         }
       } catch (error) {
         active.current = false;
-        setMessage((error as Error).message || "Sessão pausada.");
+        setMessage(`Falha no heartbeat: ${errorText(error)}`);
       } finally {
         busy.current = false;
       }
@@ -112,11 +120,11 @@ export function TeacherUsageTimer() {
   if (!me?.isProfessor || me.isStaff || me.isCoordenador) return null;
   const fmt = (n: number) => `${Math.floor(n / 60).toString().padStart(2, "0")}:${(n % 60).toString().padStart(2, "0")}`;
   return (
-    <div className="flex items-center gap-2 rounded-md bg-background/15 px-3 py-1.5 text-xs font-semibold text-white" aria-live="polite">
-      <Clock className="h-4 w-4" />
-      <span>Tempo: {fmt(remaining)}</span>
-      <span className="opacity-75">{usage?.session_active ? "em utilização" : "pausado"}</span>
-      {message && <span className="max-w-56 truncate text-amber-200" title={message}>{message}</span>}
+    <div className="flex min-w-0 max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-md bg-background/15 px-2.5 py-1.5 text-xs font-semibold leading-tight text-white" aria-live="polite">
+      <Clock className="h-4 w-4 shrink-0" />
+      <span className="shrink-0">Tempo: {fmt(remaining)}</span>
+      <span className="shrink-0 opacity-75">{usage?.session_active ? "a contar" : "pausado"}</span>
+      {message && <span className="w-full whitespace-normal break-words text-amber-200" role="status">{message}</span>}
     </div>
   );
 }
