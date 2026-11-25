@@ -287,3 +287,65 @@ h1, h2, h3 { font-family: var(--font-serif); }
   .mini-pauta .mt-8 { margin-top: 3mm !important; }
   .doc-a4.mini-pauta { break-after: auto !important; }
 }
+
+
+/* Mini-pauta: impressão A4 vertical (retrato), sem reduzir a fonte documental. */
+@page mini-a4 { size: A4 portrait; margin: 0; }
+.mini-pauta {
+  page: mini-a4;
+  width: 210mm !important;
+  min-height: 297mm !important;
+  max-width: 210mm !important;
+  padding: 6mm !important;
+  box-sizing: border-box !important;
+}
+.mini-pauta table {
+  width: 100% !important;
+  table-layout: fixed !important;
+}
+.mini-pauta th, .mini-pauta td {
+  font-family: "Times New Roman", serif !important;
+  font-size: 12pt !important;
+  line-height: 1.1 !important;
+  box-sizing: border-box;
+}
+.mini-pauta th:nth-child(2), .mini-pauta td:nth-child(2) {
+  width: 58mm !important;
+  max-width: 58mm !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-size: 12pt !important;
+}
+@media print {
+  @page mini-a4 { size: A4 portrait; margin: 0; }
+  .print-area { overflow: visible !important; }
+  .mini-pauta {
+    page: mini-a4 !important;
+    width: 210mm !important;
+    min-height: 297mm !important;
+    max-width: 210mm !important;
+    padding: 6mm !important;
+    margin: 0 auto !important;
+    overflow: visible !important;
+    box-sizing: border-box !important;
+    break-after: auto !important;
+    break-inside: avoid !important;
+    box-shadow: none !important;
+  }
+  .mini-pauta th, .mini-pauta td {
+    font-size: 12pt !important;
+    line-height: 1.1 !important;
+    white-space: nowrap;
+  }
+  .mini-pauta th:nth-child(2), .mini-pauta td:nth-child(2) {
+    width: 58mm !important;
+    max-width: 58mm !important;
+    font-size: 12pt !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .mini-pauta .mt-8 { margin-top: 4mm !important; }
+  .doc-a4.mini-pauta { break-after: auto !important; }
+}
