@@ -149,7 +149,7 @@ export function PwaInstallPrompt() {
         <button type="button" onClick={adiar} className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted">
           Mais tarde
         </button>
-        <button type="button" onClick={instalar} className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90">
+        <button type="button" onClick={() => { if (helpOpen) setHelpOpen(false); else void instalar(); }} className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90">
           <Download className="h-4 w-4" />
           {helpOpen ? "Entendi" : "Instalar aplicação"}
         </button>
