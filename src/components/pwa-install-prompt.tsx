@@ -8,7 +8,7 @@ type InstallPromptEvent = Event & {
 
 const SNOOZE_KEY = "school-pwa-install-snooze-until-v2";
 const INSTALLED_KEY = "school-pwa-installed-v2";
-const SNOOZE_DAYS = 7;
+const SNOOZE_DAYS = 3;
 
 function isStandalone() {
   return (
