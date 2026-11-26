@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { entradaExterna } from "@/lib/gestao";
 import { registerPwa } from "@/lib/pwa-register";
 import { PwaInstitutionBranding } from "@/components/pwa-institution-branding";
+import { PwaInstallPrompt } from "@/components/pwa-install-prompt";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -138,6 +139,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <PwaInstitutionBranding />
+      <PwaInstallPrompt />
       <Outlet />
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
