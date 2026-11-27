@@ -222,6 +222,7 @@ export function PwaInstallPrompt() {
       const choice = await deferredPrompt.userChoice;
       setDeferredPrompt(null);
       if (choice.outcome === "accepted") {
+        setInstalled(true);
         setVisible(false);
       } else {
         writeSnooze();
