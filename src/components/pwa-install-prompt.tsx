@@ -169,7 +169,7 @@ export function PwaInstallPrompt() {
     let timer: ReturnType<typeof setTimeout> | undefined;
 
     const show = () => {
-      if (!isStandalone()) {
+      if (!isStandalone() && readSnooze() <= Date.now()) {
         if (timer) clearTimeout(timer);
         timer = setTimeout(() => setVisible(true), 1200);
       }
